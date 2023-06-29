@@ -21,6 +21,7 @@ export class LeverageTransformerService {
             supplied: available + borrowed,
             loopApy: info.supplyApy * 5,
             boost: 5,
+            id: undefined,
         };
     }
 }

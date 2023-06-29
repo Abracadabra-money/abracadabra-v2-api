@@ -7,7 +7,7 @@ export class LeverageHelpersService {
     constructor(private readonly leverageApyService: LeverageApyService) {}
 
     public getApy(cauldron: CauldronInfo): Promise<number> {
-        if (cauldron.name === 'mApe') {
+        if (cauldron.id === 0) {
             return this.leverageApyService.getApeApy();
         }
         //@ts-ignore

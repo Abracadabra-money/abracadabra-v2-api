@@ -5,9 +5,11 @@ import { LeverageTransformerService } from './services/leverage-transformer.serv
 import { LeverageService } from './services/leverage.service';
 import { LeverageApyService } from './services/leverage-apy.service';
 import { LeverageHelpersService } from './services/leverage-helpers.service';
+import { LeverageStoreService } from './services/leverage-store.service';
+import { LeverageScheduleService } from './services/leverage-Schedule.service';
 
 @Module({
     controllers: [LeverageController],
-    providers: [LeverageHandler, LeverageTransformerService, LeverageService, LeverageApyService, LeverageHelpersService],
+    providers: [LeverageHandler, LeverageTransformerService, LeverageService, LeverageApyService, LeverageHelpersService, LeverageStoreService, LeverageScheduleService],
 })
 export class LeverageModule {}

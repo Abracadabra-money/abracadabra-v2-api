@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { cauldrons } from '../blockchain/constants';
+import { LeverageStoreService } from './services/leverage-store.service';
 import { LeverageTransformerService } from './services/leverage-transformer.service';
-import { BlockchainService } from '../blockchain/services/blockchain.service';
-import { LeverageService } from './services/leverage.service';
 
 @Injectable()
 export class LeverageHandler {
-    constructor(
-        private readonly leverageTransformerService: LeverageTransformerService,
-        private readonly blockchainService: BlockchainService,
-        private readonly leverageService: LeverageService,
-    ) {}
+    constructor(private readonly leverageStoreService: LeverageStoreService, private readonly leverageTransformerService: LeverageTransformerService) {}
 
     public async getLeverateStatistic() {
-        const mimPrice = await this.blockchainService.getMimPrice();
-
-        const cauldronsInfo = await Promise.all(cauldrons.map((cauldron) => this.leverageService.getLeverateStatistic(cauldron)));
+        const cauldronsInfo = this.leverageStoreService.getData();
+        const mimPrice = this.leverageStoreService.getMimPrice();
 
         return cauldronsInfo.map((info) => this.leverageTransformerService.toStatistic(info, mimPrice));
     }

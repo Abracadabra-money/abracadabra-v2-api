@@ -7,6 +7,7 @@ export enum ChainId {
 }
 
 export interface CauldronInfo {
+    id: number;
     address: Address;
     ltv: number;
     chain: ChainId;
@@ -19,7 +20,7 @@ export const MIM = {
 };
 
 export const cauldrons: CauldronInfo[] = [
-    { address: '0x692887E8877C6Dd31593cda44c382DB5b289B684', ltv: 70, chain: ChainId.MAINNET, name: 'mApe' }, // mApe
+    { id: 0, address: '0x692887E8877C6Dd31593cda44c382DB5b289B684', ltv: 70, chain: ChainId.MAINNET, name: 'mApe' }, // mApe
 ];
 
 export const ADDRESSES = {
