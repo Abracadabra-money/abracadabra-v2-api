@@ -19,13 +19,14 @@
         "@nestjs/core": "^9.0.0",
         "@nestjs/platform-express": "^9.0.0",
         "@nestjs/swagger": "^7.0.10",
+        "@real-wagmi/sdk": "^1.0.9",
         "error-stack-parser": "2.0.6",
         "moment": "^2.29.4",
-        "nestjs-ethers": "^2.0.3",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.2.0",
         "serialize-error": "8.0.0",
-        "stacktrace-js": "2.0.2"
+        "stacktrace-js": "2.0.2",
+        "viem": "^1.2.1"
     },
     "devDependencies": {
         "@nestjs/cli": "^9.0.0",

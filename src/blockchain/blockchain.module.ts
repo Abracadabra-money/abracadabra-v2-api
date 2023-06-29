@@ -1,15 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { EthersModule } from 'nestjs-ethers';
-
-import { ethersModules } from './constants';
 import { BlockchainService } from './services/blockchain.service';
-
-const PROVIDERS = [BlockchainService];
+import { BlockchainUtilsService } from './services/blockchain-utils.sevice';
 
 @Global()
 @Module({
-    imports: [...ethersModules.map((config) => EthersModule.forRoot(config))],
-    providers: PROVIDERS,
-    exports: PROVIDERS,
+    providers: [BlockchainService, BlockchainUtilsService],
+    exports: [BlockchainService],
 })
 export class BlockchainModule {}
