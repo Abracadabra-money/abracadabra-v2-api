@@ -21,3 +21,8 @@ export const MIM = {
 export const cauldrons: CauldronInfo[] = [
     { address: '0x692887E8877C6Dd31593cda44c382DB5b289B684', ltv: 70, chain: ChainId.MAINNET, name: 'mApe' }, // mApe
 ];
+
+export const ADDRESSES = {
+    mApe: '0xf35b31B941D94B249EaDED041DB1b05b7097fEb6',
+    magicApeLensAddress: '0xefdaC7dd721985b4Bd7Fede78465fE3525b468fd',
+};

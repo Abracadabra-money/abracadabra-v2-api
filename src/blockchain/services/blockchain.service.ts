@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ChainId } from '../constants';
+import { ChainId, ADDRESSES } from '../constants';
 import { createPublicClient, http, PublicClient, Chain, HttpTransport, getContract, Address, formatUnits } from 'viem';
 import { mainnet, fantom } from 'viem/chains';
-import { cauldronAbi, bentoboxAbi, mimPriceAbi } from '../abis';
+import { cauldronAbi, bentoboxAbi, mimPriceAbi, mapeAbi, magicApeLens } from '../abis';
 import { BlockchainUtilsService } from './blockchain-utils.sevice';
 import { CurrencyAmount, Token } from '@real-wagmi/sdk';
 
@@ -62,5 +62,23 @@ export class BlockchainService {
         const cauldron = this.getCauldron(chainId, cauldronAddress);
         const [elastic] = await cauldron.read.totalBorrow();
         return CurrencyAmount.fromRawAmount(mim, elastic);
+    }
+
+    public getMape() {
+        const publicClient = this.getProvider(ChainId.MAINNET);
+        return getContract({
+            address: ADDRESSES.mApe as Address,
+            abi: mapeAbi,
+            publicClient,
+        });
+    }
+
+    public getMagicApeLens() {
+        const publicClient = this.getProvider(ChainId.MAINNET);
+        return getContract({
+            address: ADDRESSES.magicApeLensAddress as Address,
+            abi: magicApeLens,
+            publicClient,
+        });
     }
 }
