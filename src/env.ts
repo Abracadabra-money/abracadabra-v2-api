@@ -11,3 +11,5 @@ export const LOG_FOLDER_PATH = join(process.cwd(), '/logs');
 
 // Blockchain
 export const { FTM_RPC, ETH_RPC } = env;
+
+export const { COINGECKO_API_KEY } = env;

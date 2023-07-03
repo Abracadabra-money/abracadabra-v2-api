@@ -10,6 +10,9 @@ export class LeverageHelpersService {
         if (cauldron.id === 0) {
             return this.leverageApyService.getApeApy();
         }
+        if (cauldron.id === 1 || cauldron.id === 2) {
+            return this.leverageApyService.getStargateApy(cauldron);
+        }
         //@ts-ignore
         return 0;
     }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ChainId, ADDRESSES } from '../constants';
 import { createPublicClient, http, PublicClient, Chain, HttpTransport, getContract, Address, formatUnits } from 'viem';
 import { mainnet, fantom } from 'viem/chains';
-import { cauldronAbi, bentoboxAbi, mimPriceAbi, mapeAbi, magicApeLens } from '../abis';
+import { cauldronAbi, bentoboxAbi, mimPriceAbi, mapeAbi, magicApeLens, stargatePoolAbi } from '../abis';
 import { BlockchainUtilsService } from './blockchain-utils.sevice';
 import { CurrencyAmount, Token } from '@real-wagmi/sdk';
 
@@ -78,6 +78,15 @@ export class BlockchainService {
         return getContract({
             address: ADDRESSES.magicApeLensAddress as Address,
             abi: magicApeLens,
+            publicClient,
+        });
+    }
+
+    public getStargatePool(chainId: ChainId, address: Address) {
+        const publicClient = this.getProvider(chainId);
+        return getContract({
+            address,
+            abi: stargatePoolAbi,
             publicClient,
         });
     }

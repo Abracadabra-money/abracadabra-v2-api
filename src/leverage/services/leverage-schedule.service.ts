@@ -16,7 +16,7 @@ export class LeverageScheduleService implements OnModuleInit {
     ) {}
 
     public onModuleInit() {
-        this.updateData().catch((error) => this.loggerService.error('Update leverage data', { error }));
+        this.updateData().catch((error) => console.log(error));
     }
 
     @Cron(CronExpression.EVERY_5_MINUTES)

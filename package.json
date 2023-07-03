@@ -15,12 +15,14 @@
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
     },
     "dependencies": {
+        "@nestjs/axios": "^3.0.0",
         "@nestjs/common": "^9.0.0",
         "@nestjs/core": "^9.0.0",
         "@nestjs/platform-express": "^9.0.0",
         "@nestjs/schedule": "^3.0.1",
         "@nestjs/swagger": "^7.0.10",
         "@real-wagmi/sdk": "^1.0.9",
+        "axios": "^1.4.0",
         "error-stack-parser": "2.0.6",
         "moment": "^2.29.4",
         "nodemon": "^2.0.22",

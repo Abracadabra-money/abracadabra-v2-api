@@ -12,6 +12,8 @@ export interface CauldronInfo {
     ltv: number;
     chain: ChainId;
     name: string;
+    bentoBox: Address;
+    collateral: Address;
 }
 
 export const MIM = {
@@ -20,7 +22,33 @@ export const MIM = {
 };
 
 export const cauldrons: CauldronInfo[] = [
-    { id: 0, address: '0x692887E8877C6Dd31593cda44c382DB5b289B684', ltv: 70, chain: ChainId.MAINNET, name: 'mApe' }, // mApe
+    {
+        id: 0,
+        address: '0x692887E8877C6Dd31593cda44c382DB5b289B684',
+        ltv: 70,
+        chain: ChainId.MAINNET,
+        name: 'mApe',
+        bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
+        collateral: '0xf35b31B941D94B249EaDED041DB1b05b7097fEb6',
+    },
+    {
+        id: 1,
+        address: '0xd31E19A0574dBF09310c3B06f3416661B4Dc7324',
+        ltv: 98,
+        chain: ChainId.MAINNET,
+        name: 'Stargate USDC',
+        bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
+        collateral: '0xdf0770dF86a8034b3EFEf0A1Bb3c889B8332FF56',
+    },
+    {
+        id: 2,
+        address: '0xc6B2b3fE7c3D7a6f823D9106E22e66660709001e',
+        ltv: 98,
+        chain: ChainId.MAINNET,
+        name: 'Stargate USDT',
+        bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
+        collateral: '0x38EA452219524Bb87e18dE1C24D3bB59510BD783',
+    },
 ];
 
 export const ADDRESSES = {

@@ -15,13 +15,16 @@ export class LeverageTransformerService {
         const available = parseFloat(info.available.toExact()) * mimPrice;
 
         return {
-            ...info,
+            address: info.address,
+            ltv: info.ltv,
+            chain: info.chain,
+            name: info.name,
             borrowed,
             available,
+            supplyApy: info.supplyApy,
             supplied: available + borrowed,
             loopApy: info.supplyApy * 5,
             boost: 5,
-            id: undefined,
         };
     }
 }
