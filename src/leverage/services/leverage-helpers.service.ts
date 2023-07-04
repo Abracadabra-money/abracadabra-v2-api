@@ -16,6 +16,12 @@ export class LeverageHelpersService {
         if (cauldron.id === 3) {
             return this.leverageApyService.getLusdApy();
         }
+        if (cauldron.id === 4) {
+            return this.leverageApyService.getCrvApy(cauldron, '0x9d5c5e364d81dab193b72db9e9be9d8ee669b652');
+        }
+        if (cauldron.id === 5 || cauldron.id === 6 || cauldron.id === 7) {
+            return this.leverageApyService.getCrvApy(cauldron, '0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8');
+        }
         //@ts-ignore
         return 0;
     }

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { BlockchainService } from '../../blockchain/services/blockchain.service';
 import { CauldronInfo, ChainId } from '../../blockchain/constants';
 import { CoingeckoService } from '../../coingecko/coingecko.service';
-import { getContract, parseEther, formatUnits } from 'viem';
+import { getContract, parseEther, formatUnits, Address, formatEther, parseUnits } from 'viem';
 import { getStargateBasicApy } from '../../utils/stargate-farm-apy';
-import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd } from '../../blockchain/abis';
+import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd, crvRewardPoolAbi, cvxTokenAbi } from '../../blockchain/abis';
 
 @Injectable()
 export class LeverageApyService {
@@ -90,5 +90,69 @@ export class LeverageApyService {
         const apr = aprPercentageBase * 0.95;
 
         return apr;
+    }
+
+    public async getCrvApy(cauldron: CauldronInfo, baseRewardPool: Address): Promise<number> {
+        const publicClient = this.blockchainService.getProvider(cauldron.chain);
+        const cauldronContract = this.blockchainService.getCauldron(cauldron.chain, cauldron.address);
+        const tokenRate = await cauldronContract.read.exchangeRate();
+
+        const crvRewardPoolContract = getContract({
+            address: baseRewardPool,
+            abi: crvRewardPoolAbi,
+            publicClient,
+        });
+
+        const rewardRate = await crvRewardPoolContract.read.rewardRate();
+
+        const totalSupply = await crvRewardPoolContract.read.totalSupply();
+
+        const tokenIn1000Usd = 1000n * tokenRate;
+
+        const secondsPerYear = 31536000;
+
+        const crvReward = (Number(rewardRate) / Number(totalSupply)) * Number(tokenIn1000Usd) * secondsPerYear;
+
+        const convertCrvToCvx = async (amount: number): Promise<number> => {
+            let _amount = parseUnits(amount.toFixed(18), 18);
+
+            const cvxTokenContract = getContract({
+                address: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b',
+                abi: cvxTokenAbi,
+                publicClient,
+            });
+
+            const supply = await cvxTokenContract.read.totalSupply();
+            const reductionPerCliff = await cvxTokenContract.read.reductionPerCliff();
+            const totalCliffs = await cvxTokenContract.read.totalCliffs();
+            const maxSupply = await cvxTokenContract.read.maxSupply();
+
+            const cliff = supply / reductionPerCliff;
+            //mint if below total cliffs
+            if (cliff < totalCliffs) {
+                //for reduction% take inverse of current cliff
+                const reduction = totalCliffs - cliff;
+                //reduce
+                _amount = (_amount * reduction) / totalCliffs;
+                //supply cap check
+                const amtTillMax = maxSupply - supply;
+                if (_amount > amtTillMax) {
+                    _amount = amtTillMax;
+                }
+                //mint
+                return Number(_amount);
+            }
+            return 0;
+        };
+
+        const cvxReward = await convertCrvToCvx(crvReward);
+
+        const parsedCvxReward = formatEther(BigInt(cvxReward));
+
+        const crvPrice = await this.coingeckoService.getTokenPriceByAddress(ChainId.MAINNET, '0xD533a949740bb3306d119CC777fa900bA034cd52');
+        const cvxPrice = await this.coingeckoService.getTokenPriceByAddress(ChainId.FANTOM, '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B');
+        const apy = (crvReward * crvPrice + parseFloat(parsedCvxReward) * cvxPrice) / 10;
+
+        return apy / Math.pow(10, 18);
     }
 }

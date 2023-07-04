@@ -8,3 +8,5 @@ export * from './stargate-lp-staking';
 export * from './mainnet-stargate-lp-strategy';
 export * from './community-issuacne-lusd';
 export * from './stability-pool-lusd';
+export * from './crv-reward-pool';
+export * from './tokens';

@@ -58,6 +58,42 @@ export const cauldrons: CauldronInfo[] = [
         bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
         collateral: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
     },
+    {
+        id: 4,
+        address: '0x4EAeD76C3A388f4a841E9c765560BBe7B3E4B3A0',
+        ltv: 90,
+        chain: ChainId.MAINNET,
+        name: 'cvxtricrypto2',
+        bentoBox: '0xF5BCE5077908a1b7370B9ae04AdC565EBd643966',
+        collateral: '0x5958A8DB7dfE0CC49382209069b00F54e17929C2',
+    },
+    {
+        id: 5,
+        address: '0x806e16ec797c69afa8590A55723CE4CC1b54050E',
+        ltv: 90,
+        chain: ChainId.MAINNET,
+        name: 'cvx3pool',
+        bentoBox: '0xF5BCE5077908a1b7370B9ae04AdC565EBd643966',
+        collateral: '0xd92494CB921E5C0d3A39eA88d0147bbd82E51008',
+    },
+    {
+        id: 6,
+        address: '0x6371EfE5CD6e3d2d7C477935b7669401143b7985',
+        ltv: 92,
+        chain: ChainId.MAINNET,
+        name: 'cvx3pool',
+        bentoBox: '0xF5BCE5077908a1b7370B9ae04AdC565EBd643966',
+        collateral: '0xd92494CB921E5C0d3A39eA88d0147bbd82E51008',
+    },
+    {
+        id: 7,
+        address: '0x257101F20cB7243E2c7129773eD5dBBcef8B34E0',
+        ltv: 92,
+        chain: ChainId.MAINNET,
+        name: 'cvx3pool',
+        bentoBox: '0xF5BCE5077908a1b7370B9ae04AdC565EBd643966',
+        collateral: '0x3Ba207c25A278524e1cC7FaAea950753049072A4',
+    },
 ];
 
 export const ADDRESSES = {
