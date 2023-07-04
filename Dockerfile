@@ -8,4 +8,4 @@ RUN yarn install --frozen-lockfile
 
 EXPOSE 3000
 
-CMD ["npx", "nodemon --config nodemon.json"]
+CMD ["npx nodemon --config nodemon.json"]
