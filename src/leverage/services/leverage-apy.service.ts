@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { BlockchainService } from '../../blockchain/services/blockchain.service';
 import { CauldronInfo, ChainId } from '../../blockchain/constants';
 import { CoingeckoService } from '../../coingecko/coingecko.service';
-import { getContract, parseEther } from 'viem';
+import { getContract, parseEther, formatUnits } from 'viem';
 import { getStargateBasicApy } from '../../utils/stargate-farm-apy';
-import { mainnetStrategyLpStrategy } from '../../blockchain/abis';
+import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd } from '../../blockchain/abis';
 
 @Injectable()
 export class LeverageApyService {
@@ -49,5 +49,46 @@ export class LeverageApyService {
         const apy = basicApy * Number(farmingPercentage) * (1 - fee);
 
         return apy ?? 0;
+    }
+
+    public async getLusdApy(): Promise<number> {
+        const communityIssuanceAddress = '0xD8c9D9071123a059C6E0A945cF0e0c82b508d816';
+        const stabilityPoolAddress = '0x66017D22b0f8556afDd19FC67041899Eb65a21bb';
+
+        const publicClient = this.blockchainService.getProvider(ChainId.MAINNET);
+
+        const communityIssuanceContract = getContract({
+            address: communityIssuanceAddress,
+            abi: communityIssuacneLusdAbi,
+            publicClient,
+        });
+
+        const stabilityPoolContract = getContract({
+            address: stabilityPoolAddress,
+            abi: stabilityPoolLusd,
+            publicClient,
+        });
+
+        const lqtyPrice = await this.coingeckoService.getTokenPriceByAddress(ChainId.MAINNET, '0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d');
+
+        const totalLQTYIssued = await communityIssuanceContract.read.totalLQTYIssued();
+        const issuanceCap = await communityIssuanceContract.read.LQTYSupplyCap();
+
+        const remainingStabilityPoolLQTYReward = formatUnits(issuanceCap - totalLQTYIssued, 18);
+
+        const lusdInStabilityPool = formatUnits(await stabilityPoolContract.read.getTotalLUSDDeposits(), 18);
+
+        const yearlyIssuanceFraction = 0.5;
+        const dailyIssuanceFraction = 1 - yearlyIssuanceFraction ** (1 / 365);
+
+        const lqtyIssuanceOneDay = +remainingStabilityPoolLQTYReward * dailyIssuanceFraction;
+
+        const lqtyIssuanceOneDayInUSD = lqtyIssuanceOneDay * lqtyPrice;
+
+        const aprPercentageBase = (lqtyIssuanceOneDayInUSD * (365 * 100)) / +lusdInStabilityPool;
+
+        const apr = aprPercentageBase * 0.95;
+
+        return apr;
     }
 }

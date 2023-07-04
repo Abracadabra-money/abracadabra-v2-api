@@ -49,6 +49,15 @@ export const cauldrons: CauldronInfo[] = [
         bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
         collateral: '0x38EA452219524Bb87e18dE1C24D3bB59510BD783',
     },
+    {
+        id: 3,
+        address: '0x8227965A7f42956549aFaEc319F4E444aa438Df5',
+        ltv: 95,
+        chain: ChainId.MAINNET,
+        name: 'LUSD',
+        bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
+        collateral: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+    },
 ];
 
 export const ADDRESSES = {

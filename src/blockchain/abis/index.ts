@@ -6,3 +6,5 @@ export * from './mape';
 export * from './stargate-pool';
 export * from './stargate-lp-staking';
 export * from './mainnet-stargate-lp-strategy';
+export * from './community-issuacne-lusd';
+export * from './stability-pool-lusd';
