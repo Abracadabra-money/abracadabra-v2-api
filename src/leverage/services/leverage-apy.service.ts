@@ -188,4 +188,11 @@ export class LeverageApyService {
 
         return apy;
     }
+
+    public async getYearnVaultsApy(cauldron: CauldronInfo): Promise<number> {
+        const { data } = await firstValueFrom(this.httpService.get('https://api.yearn.finance/v1/chains/1/vaults/all'));
+        const tokenItem = data.find(({ address }) => cauldron.collateral.toLocaleLowerCase() === address.toLocaleLowerCase());
+        if (!tokenItem) return 0;
+        return tokenItem.apy.net_apy * 100;
+    }
 }
