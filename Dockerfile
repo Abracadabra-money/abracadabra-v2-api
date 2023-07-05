@@ -11,6 +11,6 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install --production=true --frozen-lockfile
 
-EXPOSE 3000
+EXPOSE 8000
 
 CMD ["yarn", "start:prod"]
