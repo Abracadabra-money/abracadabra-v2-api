@@ -22,6 +22,9 @@ export class LeverageHelpersService {
         if (cauldron.id === 5 || cauldron.id === 6 || cauldron.id === 7) {
             return this.leverageApyService.getCrvApy(cauldron, '0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8');
         }
+        if (cauldron.id === 8) {
+            return this.leverageApyService.getVeloApy(cauldron);
+        }
         //@ts-ignore
         return 0;
     }

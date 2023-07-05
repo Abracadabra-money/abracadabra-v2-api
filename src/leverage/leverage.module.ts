@@ -8,9 +8,10 @@ import { LeverageHelpersService } from './services/leverage-helpers.service';
 import { LeverageStoreService } from './services/leverage-store.service';
 import { LeverageScheduleService } from './services/leverage-schedule.service';
 import { CoingeckoModule } from '../coingecko/coingecko.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-    imports: [CoingeckoModule],
+    imports: [CoingeckoModule, HttpModule],
     controllers: [LeverageController],
     providers: [LeverageHandler, LeverageTransformerService, LeverageService, LeverageApyService, LeverageHelpersService, LeverageStoreService, LeverageScheduleService],
 })

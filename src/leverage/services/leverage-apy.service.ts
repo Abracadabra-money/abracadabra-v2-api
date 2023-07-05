@@ -4,11 +4,13 @@ import { CauldronInfo, ChainId } from '../../blockchain/constants';
 import { CoingeckoService } from '../../coingecko/coingecko.service';
 import { getContract, parseEther, formatUnits, Address, formatEther, parseUnits } from 'viem';
 import { getStargateBasicApy } from '../../utils/stargate-farm-apy';
-import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd, crvRewardPoolAbi, cvxTokenAbi } from '../../blockchain/abis';
+import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd, crvRewardPoolAbi, cvxTokenAbi, solidlyGaugeVolatileLPStrategyAbi } from '../../blockchain/abis';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class LeverageApyService {
-    constructor(private readonly blockchainService: BlockchainService, private readonly coingeckoService: CoingeckoService) {}
+    constructor(private readonly blockchainService: BlockchainService, private readonly coingeckoService: CoingeckoService, private readonly httpService: HttpService) {}
 
     public async getApeApy(): Promise<number> {
         const magicApeContract = this.blockchainService.getMape();
@@ -154,5 +156,36 @@ export class LeverageApyService {
         const apy = (crvReward * crvPrice + parseFloat(parsedCvxReward) * cvxPrice) / 10;
 
         return apy / Math.pow(10, 18);
+    }
+
+    public async getVeloApy(cauldron: CauldronInfo): Promise<number> {
+        const { data } = await firstValueFrom(this.httpService.get('https://api.velodrome.finance/api/v1/pairs'));
+
+        const opusdcPair = data.data.find((pair) => pair.symbol === 'vAMM-OP/USDC');
+
+        const APYVault: number = opusdcPair.apr;
+
+        const bentoboxContract = this.blockchainService.getBentobox(cauldron.chain, cauldron.bentoBox);
+        const [, targetPercentage] = await bentoboxContract.read.strategyData([cauldron.collateral]);
+        const percentage = Number(targetPercentage) / 100;
+
+        const getVeloManagementFee = async () => {
+            const strategyAddress = await bentoboxContract.read.strategy([cauldron.collateral]);
+            const publicClient = this.blockchainService.getProvider(cauldron.chain);
+
+            const strategy = getContract({
+                address: strategyAddress,
+                abi: solidlyGaugeVolatileLPStrategyAbi,
+                publicClient,
+            });
+
+            return await strategy.read.feePercent();
+        };
+
+        const stratPercentage = (await getVeloManagementFee()) / 100;
+
+        const apy = APYVault * percentage * (1 - stratPercentage);
+
+        return apy;
     }
 }

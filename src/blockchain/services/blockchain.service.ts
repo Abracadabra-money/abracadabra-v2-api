@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ChainId, ADDRESSES } from '../constants';
 import { createPublicClient, http, PublicClient, Chain, HttpTransport, getContract, Address, formatUnits } from 'viem';
-import { mainnet, fantom } from 'viem/chains';
+import { mainnet, fantom, optimism } from 'viem/chains';
 import { cauldronAbi, bentoboxAbi, mimPriceAbi, mapeAbi, magicApeLens, stargatePoolAbi } from '../abis';
 import { BlockchainUtilsService } from './blockchain-utils.sevice';
 import { CurrencyAmount, Token } from '@real-wagmi/sdk';
@@ -13,6 +13,8 @@ export class BlockchainService {
     public getProvider(chainId: ChainId): PublicClient<HttpTransport, Chain> {
         if (chainId === ChainId.FANTOM) return createPublicClient({ chain: fantom, transport: http() });
         if (chainId === ChainId.MAINNET) return createPublicClient({ chain: mainnet, transport: http() });
+        if (chainId === ChainId.OPTIMISM)
+            return createPublicClient({ chain: { ...optimism, rpcUrls: { ...optimism.rpcUrls, default: { http: ['https://optimism.publicnode.com'] } } }, transport: http() });
 
         throw new Error(`${chainId} provider not implemented`);
     }

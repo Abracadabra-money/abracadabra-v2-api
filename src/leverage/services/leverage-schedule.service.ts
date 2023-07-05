@@ -19,7 +19,7 @@ export class LeverageScheduleService implements OnModuleInit {
         this.updateData().catch((error) => console.log(error));
     }
 
-    @Cron(CronExpression.EVERY_5_MINUTES)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     public async updateData() {
         const mimPrice = await this.blockchainService.getMimPrice();
 

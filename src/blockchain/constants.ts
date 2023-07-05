@@ -3,6 +3,7 @@ import { Token } from '@real-wagmi/sdk';
 
 export enum ChainId {
     MAINNET = 1,
+    OPTIMISM = 10,
     FANTOM = 250,
 }
 
@@ -19,6 +20,7 @@ export interface CauldronInfo {
 export const MIM = {
     [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3', 18),
     [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x82f0b8b456c1a451378467398982d4834b6829c1', 18),
+    [ChainId.OPTIMISM]: new Token(ChainId.FANTOM, '0xb153fb3d196a8eb25522705560ac152eeec57901', 18),
 };
 
 export const cauldrons: CauldronInfo[] = [
@@ -93,6 +95,15 @@ export const cauldrons: CauldronInfo[] = [
         name: 'cvx3pool',
         bentoBox: '0xF5BCE5077908a1b7370B9ae04AdC565EBd643966',
         collateral: '0x3Ba207c25A278524e1cC7FaAea950753049072A4',
+    },
+    {
+        id: 8,
+        address: '0x68f498C230015254AFF0E1EB6F85Da558dFf2362',
+        ltv: 70,
+        chain: ChainId.OPTIMISM,
+        name: 'Velodrome Volatile OP/USDC',
+        bentoBox: '0xa93c81f564579381116ee3e007c9fcfd2eba1723',
+        collateral: '0x6eb1709e0b562097bf1cc48bc6a378446c297c04',
     },
 ];
 
