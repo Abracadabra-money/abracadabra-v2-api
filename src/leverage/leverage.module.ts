@@ -6,7 +6,7 @@ import { LeverageService } from './services/leverage.service';
 import { LeverageApyService } from './services/leverage-apy.service';
 import { LeverageHelpersService } from './services/leverage-helpers.service';
 import { LeverageStoreService } from './services/leverage-store.service';
-import { LeverageScheduleService } from './services/leverage-Schedule.service';
+import { LeverageScheduleService } from './services/leverage-schedule.service';
 import { CoingeckoModule } from '../coingecko/coingecko.module';
 
 @Module({
