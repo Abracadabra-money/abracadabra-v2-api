@@ -7,10 +7,18 @@ import { getStargateBasicApy } from '../../utils/stargate-farm-apy';
 import { mainnetStrategyLpStrategy, communityIssuacneLusdAbi, stabilityPoolLusd, crvRewardPoolAbi, cvxTokenAbi, solidlyGaugeVolatileLPStrategyAbi } from '../../blockchain/abis';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { LeverageGlpHelpers } from './leverage-glp-helpers';
+import { bigNumberify, expandDecimals, formatAmount } from '../../utils/glp-utils';
+import { BASIS_POINTS_DIVISOR, GLP_DECIMALS, SECONDS_PER_YEAR } from '../constants/glp';
 
 @Injectable()
 export class LeverageApyService {
-    constructor(private readonly blockchainService: BlockchainService, private readonly coingeckoService: CoingeckoService, private readonly httpService: HttpService) {}
+    constructor(
+        private readonly blockchainService: BlockchainService,
+        private readonly coingeckoService: CoingeckoService,
+        private readonly httpService: HttpService,
+        private readonly leverageGlpHelpers: LeverageGlpHelpers,
+    ) {}
 
     public async getApeApy(): Promise<number> {
         const magicApeContract = this.blockchainService.getMape();
@@ -194,5 +202,39 @@ export class LeverageApyService {
         const tokenItem = data.find(({ address }) => cauldron.collateral.toLocaleLowerCase() === address.toLocaleLowerCase());
         if (!tokenItem) return 0;
         return tokenItem.apy.net_apy * 100;
+    }
+
+    public async getGlpApy(isMagic = false): Promise<number> {
+        const stakingData = await this.leverageGlpHelpers.getStakingData();
+        const aum = await this.leverageGlpHelpers.getAum();
+        const gmxPrice = await this.leverageGlpHelpers.getGmxPrice();
+        const nativeTokenPrice = await this.leverageGlpHelpers.getNativeTokenPrice();
+        const { supplyData } = await this.leverageGlpHelpers.getBalanceAndSupplyData();
+        //@ts-ignore
+        const glpSupply = supplyData.glp;
+        const glpPrice = glpSupply && glpSupply > 0n ? (aum * expandDecimals(1, GLP_DECIMALS)) / glpSupply : bigNumberify(0);
+
+        const glpSupplyUsd = (glpSupply * glpPrice) / expandDecimals(1, 18);
+        //@ts-ignore
+        const stakedGlpTrackerAnnualRewardsUsd = (stakingData.stakedGlpTracker.tokensPerInterval * BigInt(SECONDS_PER_YEAR) * gmxPrice) / expandDecimals(1, 18);
+        const glpAprForEsGmx = glpSupplyUsd && glpSupplyUsd > 0n ? (stakedGlpTrackerAnnualRewardsUsd * BigInt(BASIS_POINTS_DIVISOR)) / glpSupplyUsd : bigNumberify(0);
+        //@ts-ignore
+        const feeGlpTrackerAnnualRewardsUsd = (stakingData.feeGlpTracker.tokensPerInterval * BigInt(SECONDS_PER_YEAR) * nativeTokenPrice) / expandDecimals(1, 18);
+
+        const glpAprForNativeToken = glpSupplyUsd && glpSupplyUsd > 0n ? (feeGlpTrackerAnnualRewardsUsd * BigInt(BASIS_POINTS_DIVISOR)) / glpSupplyUsd : bigNumberify(0);
+
+        const glpAprTotal = glpAprForNativeToken + glpAprForEsGmx;
+        const parseAmount = formatAmount(glpAprTotal, 2, 2, true);
+
+        if (isMagic) {
+            const fee = (await this.leverageGlpHelpers.getMagicFeePercent()) / 10000;
+            return (Math.pow(1 + parseAmount / 100 / 730, 730) - 1) * 100 * (1 - fee);
+        }
+
+        const feePercent = await this.leverageGlpHelpers.getFeePercent();
+
+        const fee = feePercent / 100;
+
+        return parseAmount * (1 - fee);
     }
 }

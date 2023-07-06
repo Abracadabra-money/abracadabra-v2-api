@@ -11,3 +11,4 @@ export * from './stability-pool-lusd';
 export * from './crv-reward-pool';
 export * from './tokens';
 export * from './solidly-gauge-volatile-lp-strategy';
+export * from './glp';

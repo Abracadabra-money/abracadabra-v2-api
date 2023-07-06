@@ -14,6 +14,8 @@ export class LeverageTransformerService {
         const borrowed = parseFloat(info.borrowed.toExact()) * mimPrice;
         const available = parseFloat(info.available.toExact()) * mimPrice;
 
+        const boost = info.id === 16 || info.id === 17 ? 4 : 5;
+
         return {
             address: info.address,
             ltv: info.ltv,
@@ -23,8 +25,8 @@ export class LeverageTransformerService {
             available,
             supplyApy: info.supplyApy,
             supplied: available + borrowed,
-            loopApy: info.supplyApy * 5,
-            boost: 5,
+            loopApy: info.supplyApy * boost,
+            boost,
         };
     }
 }

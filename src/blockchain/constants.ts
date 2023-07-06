@@ -5,6 +5,7 @@ export enum ChainId {
     MAINNET = 1,
     OPTIMISM = 10,
     FANTOM = 250,
+    ARBITRUM = 42161,
 }
 
 export interface CauldronInfo {
@@ -17,10 +18,11 @@ export interface CauldronInfo {
     collateral: Address;
 }
 
-export const MIM = {
+export const MIM: { [key in ChainId]: Token } = {
     [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3', 18),
     [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x82f0b8b456c1a451378467398982d4834b6829c1', 18),
     [ChainId.OPTIMISM]: new Token(ChainId.FANTOM, '0xb153fb3d196a8eb25522705560ac152eeec57901', 18),
+    [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a', 18),
 };
 
 export const cauldrons: CauldronInfo[] = [
@@ -29,7 +31,7 @@ export const cauldrons: CauldronInfo[] = [
         address: '0x692887E8877C6Dd31593cda44c382DB5b289B684',
         ltv: 70,
         chain: ChainId.MAINNET,
-        name: 'mApe',
+        name: 'MagicAPE',
         bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
         collateral: '0xf35b31B941D94B249EaDED041DB1b05b7097fEb6',
     },
@@ -167,6 +169,24 @@ export const cauldrons: CauldronInfo[] = [
         name: 'yv-3Crypto',
         bentoBox: '0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce',
         collateral: '0x8078198Fc424986ae89Ce4a910Fc109587b6aBF3',
+    },
+    {
+        id: 16,
+        address: '0x5698135CA439f21a57bDdbe8b582C62f090406D5',
+        ltv: 75,
+        chain: ChainId.ARBITRUM,
+        name: 'GLP',
+        bentoBox: '0x7c8fef8ea9b1fe46a7689bfb8149341c90431d38',
+        collateral: '0x3477df28ce70cecf61fffa7a95be4bec3b3c7e75',
+    },
+    {
+        id: 17,
+        address: '0x726413d7402fF180609d0EBc79506df8633701B1',
+        ltv: 75,
+        chain: ChainId.ARBITRUM,
+        name: 'MagicGLP',
+        bentoBox: '0x7c8fef8ea9b1fe46a7689bfb8149341c90431d38',
+        collateral: '0x85667409a723684fe1e57dd1abde8d88c2f54214',
     },
 ];
 

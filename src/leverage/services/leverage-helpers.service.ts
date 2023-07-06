@@ -25,6 +25,9 @@ export class LeverageHelpersService {
         if (cauldron.id === 8) {
             return this.leverageApyService.getVeloApy(cauldron);
         }
+        if (cauldron.id === 16 || cauldron.id === 17) {
+            return this.leverageApyService.getGlpApy(cauldron.id === 17);
+        }
 
         return this.leverageApyService.getYearnVaultsApy(cauldron);
     }
