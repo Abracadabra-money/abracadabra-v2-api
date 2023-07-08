@@ -29,6 +29,8 @@ export class LeverageScheduleService implements OnModuleInit {
             this.leverageStoreService.updateStore(cauldronsInfo);
             this.leverageStoreService.updateMimPrice(mimPrice);
             this.loggerService.info('Leverage data updated');
-        } catch(err){}
+        } catch(err){
+            console.log(err);
+        }
     }
 }
