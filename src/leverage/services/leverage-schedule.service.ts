@@ -21,7 +21,7 @@ export class LeverageScheduleService implements OnModuleInit {
 
     @Cron(CronExpression.EVERY_10_MINUTES)
     public async updateData() {
-        try{
+        try {
             const mimPrice = await this.blockchainService.getMimPrice();
 
             const cauldronsInfo = await Promise.all(cauldrons.map((cauldron) => this.leverageService.getLeverateStatistic(cauldron)));
@@ -29,7 +29,7 @@ export class LeverageScheduleService implements OnModuleInit {
             this.leverageStoreService.updateStore(cauldronsInfo);
             this.leverageStoreService.updateMimPrice(mimPrice);
             this.loggerService.info('Leverage data updated');
-        } catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
