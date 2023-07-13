@@ -6,18 +6,22 @@ import { cauldronAbi, bentoboxAbi, mimPriceAbi, mapeAbi, magicApeLens, stargateP
 import { BlockchainUtilsService } from './blockchain-utils.sevice';
 import { CurrencyAmount, Token } from '@real-wagmi/sdk';
 
+const viemProviders = {
+    [ChainId.FANTOM]: createPublicClient({ chain: fantom, transport: http() }),
+    [ChainId.MAINNET]: createPublicClient({ chain: mainnet, transport: http() }),
+    [ChainId.OPTIMISM]: createPublicClient({ chain: { ...optimism, rpcUrls: { ...optimism.rpcUrls, default: { http: ['https://optimism.publicnode.com'] } } }, transport: http() }),
+    [ChainId.ARBITRUM]: createPublicClient({ chain: arbitrum, transport: http() })
+}
+
 @Injectable()
 export class BlockchainService {
     constructor(private readonly blockchainUtilsService: BlockchainUtilsService) {}
 
     public getProvider(chainId: ChainId): PublicClient<HttpTransport, Chain> {
-        if (chainId === ChainId.FANTOM) return createPublicClient({ chain: fantom, transport: http() });
-        if (chainId === ChainId.MAINNET) return createPublicClient({ chain: mainnet, transport: http() });
-        if (chainId === ChainId.OPTIMISM)
-            return createPublicClient({ chain: { ...optimism, rpcUrls: { ...optimism.rpcUrls, default: { http: ['https://optimism.publicnode.com'] } } }, transport: http() });
-        if (chainId === ChainId.ARBITRUM) return createPublicClient({ chain: arbitrum, transport: http() });
-
-        throw new Error(`${chainId} provider not implemented`);
+        if(!viemProviders[chainId]){
+            throw new Error(`${chainId} provider not implemented`);
+        }
+        return viemProviders[chainId];
     }
 
     public getCauldron(chainId: ChainId, address: Address) {
