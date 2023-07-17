@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { cauldrons } from '../blockchain/constants';
 import { LeverageStoreService } from './services/leverage-store.service';
 import { LeverageTransformerService } from './services/leverage-transformer.service';
 

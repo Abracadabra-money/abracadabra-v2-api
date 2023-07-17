@@ -5,6 +5,7 @@ import { LeverageService } from './leverage.service';
 import { cauldrons } from '../../blockchain/constants';
 import { LeverageStoreService } from './leverage-store.service';
 import { LoggerService } from '../../logger/logger.service';
+import { ICauldronStatistic } from './leverage-transformer.service';
 
 @Injectable()
 export class LeverageScheduleService implements OnModuleInit {
@@ -24,7 +25,14 @@ export class LeverageScheduleService implements OnModuleInit {
         try {
             const mimPrice = await this.blockchainService.getMimPrice();
 
-            const cauldronsInfo = await Promise.all(cauldrons.map((cauldron) => this.leverageService.getLeverateStatistic(cauldron)));
+            let cauldronsInfo: ICauldronStatistic[] = [];
+
+            for (const cauldron of cauldrons) {
+                const info = await this.leverageService.getLeverateStatistic(cauldron);
+                cauldronsInfo.push(info);
+            }
+
+            if (cauldronsInfo.length === 0) return;
 
             this.leverageStoreService.updateStore(cauldronsInfo);
             this.leverageStoreService.updateMimPrice(mimPrice);

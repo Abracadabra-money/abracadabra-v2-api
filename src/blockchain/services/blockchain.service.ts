@@ -10,15 +10,15 @@ const viemProviders = {
     [ChainId.FANTOM]: createPublicClient({ chain: fantom, transport: http() }),
     [ChainId.MAINNET]: createPublicClient({ chain: mainnet, transport: http() }),
     [ChainId.OPTIMISM]: createPublicClient({ chain: { ...optimism, rpcUrls: { ...optimism.rpcUrls, default: { http: ['https://optimism.publicnode.com'] } } }, transport: http() }),
-    [ChainId.ARBITRUM]: createPublicClient({ chain: arbitrum, transport: http() })
-}
+    [ChainId.ARBITRUM]: createPublicClient({ chain: arbitrum, transport: http() }),
+};
 
 @Injectable()
 export class BlockchainService {
     constructor(private readonly blockchainUtilsService: BlockchainUtilsService) {}
 
     public getProvider(chainId: ChainId): PublicClient<HttpTransport, Chain> {
-        if(!viemProviders[chainId]){
+        if (!viemProviders[chainId]) {
             throw new Error(`${chainId} provider not implemented`);
         }
         return viemProviders[chainId];
