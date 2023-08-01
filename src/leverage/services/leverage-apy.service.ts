@@ -171,7 +171,7 @@ export class LeverageApyService {
 
         const opusdcPair = data.data.find((pair) => pair.symbol === 'vAMM-OP/USDC');
 
-        const APYVault: number = opusdcPair.apr;
+        const APYVault: number = opusdcPair?.apr || 0;
 
         const bentoboxContract = this.blockchainService.getBentobox(cauldron.chain, cauldron.bentoBox);
         const [, targetPercentage] = await bentoboxContract.read.strategyData([cauldron.collateral]);
