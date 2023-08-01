@@ -7,7 +7,7 @@ import { BlockchainUtilsService } from './blockchain-utils.sevice';
 import { CurrencyAmount, Token } from '@real-wagmi/sdk';
 
 const viemProviders = {
-    [ChainId.FANTOM]: createPublicClient({ chain: fantom, transport: http() }),
+    [ChainId.FANTOM]: createPublicClient({ chain: { ...fantom, rpcUrls: { ...fantom.rpcUrls, default: { http: ['https://rpc.ftm.tools'] } } }, transport: http() }),
     [ChainId.MAINNET]: createPublicClient({ chain: mainnet, transport: http() }),
     [ChainId.OPTIMISM]: createPublicClient({ chain: { ...optimism, rpcUrls: { ...optimism.rpcUrls, default: { http: ['https://optimism.publicnode.com'] } } }, transport: http() }),
     [ChainId.ARBITRUM]: createPublicClient({ chain: arbitrum, transport: http() }),
